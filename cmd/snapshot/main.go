@@ -27,6 +27,12 @@ func main() {
 		panic(lineNo(err))
 	}
 	fmt.Println(site)
+
+	// Destroy the site before snapshotting
+	if err := os.RemoveAll(site.Hostname()); err != nil {
+		panic(lineNo(err))
+	}
+
 	if err := saveHTML(site); err != nil {
 		panic(lineNo(err))
 	}
@@ -92,6 +98,10 @@ func saveHTML(u *url.URL) error {
 		return lineNo(err)
 	}
 	defer resp.Body.Close()
+
+	if resp.StatusCode > 399 {
+		return lineNo(errors.New(resp.Status))
+	}
 
 	buf := bufio.NewReader(resp.Body)
 	peeked, err := buf.Peek(512)
