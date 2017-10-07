@@ -16,6 +16,12 @@ import (
 )
 
 func main() {
+	if len(os.Args) != 2 {
+		fmt.Println("Usage:")
+		fmt.Println("\tsnapshot https://www.whitehouse.gov")
+		os.Exit(1)
+	}
+
 	site, err := url.Parse(os.Args[1])
 	if err != nil {
 		panic(lineNo(err))
